@@ -2,6 +2,8 @@ package ipa_go_jp
 
 import (
 	"clawer/modules/utilities"
+	"clawer/repository/ipa_service"
+
 	"fmt"
 	"strconv"
 )
@@ -12,7 +14,7 @@ func Execute() {
 	var possiblyYears = getPossiblyIPAExamYears()
 	// DBに保存されていない年度のみ過去問題の取得を行う
 	for _, year := range possiblyYears {
-		if isStoredIPAExam(year) {
+		if ipa_service.IsStoredIPAExam(year) {
 			continue
 		}
 		// IPAの過去問題のURLを取得する
@@ -26,6 +28,6 @@ func Execute() {
 		// documentからIPAの過去問題を取得する
 		var exams = getIPAExamFromHTMLDoc(doc)
 		// IPAの過去問題をDBに保存する
-		saveIPAExam(exams)
+		ipa_service.SaveIPAExam(exams)
 	}
 }
