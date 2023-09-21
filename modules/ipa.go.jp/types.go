@@ -9,7 +9,7 @@ type IPAExamSubject struct {
 	// 解答のURL
 	answer_url string
 	// 解説のURL
-	comment_url *string
+	comment_url string
 }
 
 // IPAの過去問題の構造体

@@ -1,18 +1,18 @@
 package main
 
 import (
+	ipagojp "clawer/modules/ipa.go.jp"
 	"clawer/modules/utilities"
 	"fmt"
 )
 
 func main() {
-	const (
-		sampleUrl = "https://golang.org"
-	)
+	url := ipagojp.GetIPAExamUrls()[0]
 	// HttpGet()を呼び出す
-	body, err := utilities.HttpGet(sampleUrl)
+	doc, err := utilities.GetGoQueryFromUrl(url)
 	if err != nil {
 		panic(err)
 	}
-	fmt.Println(body)
+	exams := ipagojp.GetIPAExamFromHTMLDoc(doc)
+	fmt.Printf("%+v\n", exams)
 }
