@@ -19,13 +19,11 @@ func SaveIPAExam(exams []*models.IPAExam) {
 }
 
 // 指定した年度のIPAの過去問題がDBに保存されているかを返す
-func IsStoredIPAExam(year int) bool {
+func IsFullStoredIPAExam(year int) bool {
 	db := utilities.Open()
-	var exists bool
+	var count int64
 	db.Model(&models.IPAExam{}).
 		Where("year = ?", year).
-		Limit(1).
-		Select("1").
-		Find(&exists)
-	return exists
+		Count(&count)
+	return count == 2
 }

@@ -59,7 +59,7 @@ func getIPAExamFromHTMLDoc(doc *goquery.Document) []*models.IPAExam {
 		// タイトルから正規表現で春期・秋期を取得する
 		var seasonTitleName = seasonTitleElement.Text()
 		var seasonName = regexp.MustCompile(`.期`).FindString(seasonTitleName)
-		var seasonType = 0
+		var seasonType uint8 = 0
 		if seasonName == "春期" {
 			seasonType = 1
 		} else if seasonName == "秋期" {
@@ -90,7 +90,7 @@ func getIPAExamFromHTMLDoc(doc *goquery.Document) []*models.IPAExam {
 				// 試験区分名を取得する
 				var examSubjectName = examSubjectElement.Find(".def-list__ttl").Text()
 
-				var examSubject = &models.IPAExamSubject{Name: examSubjectName, QuestionUrl: "", AnswerUrl: "", CommentUrl: ""}
+				var examSubject = &models.IPAExamSubject{Name: examSubjectName, IPAExamData: []*models.IPAExamData{}}
 				examType.Subjects = append(examType.Subjects, examSubject)
 
 				// 問題・解答・解説のURLを含む要素を取得する
@@ -103,13 +103,18 @@ func getIPAExamFromHTMLDoc(doc *goquery.Document) []*models.IPAExam {
 						examSubjectUrl = domainIPA + examSubjectUrl
 					}
 					// URLを問題・解答・解説か判定する
+					var dataType uint8 = 0
 					if strings.Contains(examSubjectUrl, "qs") {
-						examSubject.QuestionUrl = examSubjectUrl
+						dataType = 1
 					} else if strings.Contains(examSubjectUrl, "ans") {
-						examSubject.AnswerUrl = examSubjectUrl
+						dataType = 2
 					} else if strings.Contains(examSubjectUrl, "cmnt") {
-						examSubject.CommentUrl = examSubjectUrl
+						dataType = 3
+					} else {
+						return
 					}
+					var examSubjectData = &models.IPAExamData{Url: examSubjectUrl, DataType: dataType}
+					examSubject.IPAExamData = append(examSubject.IPAExamData, examSubjectData)
 				})
 			})
 		})

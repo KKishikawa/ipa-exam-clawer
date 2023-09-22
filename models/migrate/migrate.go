@@ -11,5 +11,6 @@ func AutoMigration(db *gorm.DB) {
 		&models.IPAExam{},
 		&models.IPAExamType{},
 		&models.IPAExamSubject{},
+		&models.IPAExamData{},
 	)
 }

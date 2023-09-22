@@ -14,7 +14,7 @@ func Execute() {
 	var possiblyYears = getPossiblyIPAExamYears()
 	// DBに保存されていない年度のみ過去問題の取得を行う
 	for _, year := range possiblyYears {
-		if ipa_service.IsStoredIPAExam(year) {
+		if ipa_service.IsFullStoredIPAExam(year) {
 			continue
 		}
 		// IPAの過去問題のURLを取得する
