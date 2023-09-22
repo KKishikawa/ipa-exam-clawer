@@ -11,3 +11,13 @@ func Range[T int | uint](start, end T) []T {
 	}
 	return s
 }
+
+// 指定した値がsliceに含まれているかを返す
+func Contains[T byte | ~int | ~uint | string | bool](slice *[]T, value T) bool {
+	for _, v := range *slice {
+		if v == value {
+			return true
+		}
+	}
+	return false
+}

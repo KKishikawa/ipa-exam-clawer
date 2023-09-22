@@ -18,12 +18,12 @@ func SaveIPAExam(exams []*models.IPAExam) {
 	})
 }
 
-// 指定した年度のIPAの過去問題がDBに保存されているかを返す
-func IsFullStoredIPAExam(year int) bool {
+// 指定した年度のIPAの過去問題のうち登録済みの時期を返す
+func GetSeasonTypesByYear(year int) []uint8 {
 	db := utilities.Open()
-	var count int64
+	var seasonTypes []uint8
 	db.Model(&models.IPAExam{}).
 		Where("year = ?", year).
-		Count(&count)
-	return count == 2
+		Pluck("season_type", &seasonTypes)
+	return seasonTypes
 }

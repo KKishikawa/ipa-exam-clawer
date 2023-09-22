@@ -42,7 +42,7 @@ func getIPAExamUrl(year int) string {
 }
 
 // IPAの過去問題をdocumentから取得する
-func getIPAExamFromHTMLDoc(doc *goquery.Document) []*models.IPAExam {
+func getIPAExamFromHTMLDoc(doc *goquery.Document, excludeSeasonTypes ...uint8) []*models.IPAExam {
 	var exams []*models.IPAExam
 
 	var titleText = doc.Find("title").Text()
@@ -65,6 +65,10 @@ func getIPAExamFromHTMLDoc(doc *goquery.Document) []*models.IPAExam {
 		} else if seasonName == "秋期" {
 			seasonType = 2
 		} else {
+			return
+		}
+		// excludeSeasonTypesに含まれている場合は処理をスキップする
+		if utilities.Contains(&excludeSeasonTypes, seasonType) {
 			return
 		}
 		var exam = &models.IPAExam{Year: year, SeasonType: seasonType, ExamTypes: []*models.IPAExamType{}}

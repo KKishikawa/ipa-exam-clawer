@@ -14,9 +14,11 @@ func Execute() {
 	var possiblyYears = getPossiblyIPAExamYears()
 	// DBに保存されていない年度のみ過去問題の取得を行う
 	for _, year := range possiblyYears {
-		if ipa_service.IsFullStoredIPAExam(year) {
+		var storedSeasonTypes = ipa_service.GetSeasonTypesByYear(year)
+		if len(storedSeasonTypes) == 2 {
 			continue
 		}
+
 		// IPAの過去問題のURLを取得する
 		var url = getIPAExamUrl(year)
 		// documentを取得する
@@ -26,7 +28,7 @@ func Execute() {
 			continue
 		}
 		// documentからIPAの過去問題を取得する
-		var exams = getIPAExamFromHTMLDoc(doc)
+		var exams = getIPAExamFromHTMLDoc(doc, storedSeasonTypes...)
 		// IPAの過去問題をDBに保存する
 		ipa_service.SaveIPAExam(exams)
 	}
